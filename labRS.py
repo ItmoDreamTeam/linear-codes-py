@@ -29,10 +29,10 @@ def get_field_poly():
     return np.array([1, 0, 1, 1])
 
 
-def normalize_poly(polynom):
+def normalize_poly(polynomial):
     result = []
 
-    for x in np.nditer(polynom):
+    for x in np.nditer(polynomial):
         if abs(x) % 2 == 0:
             x = 0
             result.append(x)
@@ -106,8 +106,8 @@ def get_syndrome(received_message):
     return np.array(normalize_poly(mod_field(received_message)))
 
 
-def mod_field(polynom):
-    return np.polydiv(polynom, get_field_poly())[1]
+def mod_field(polynomial):
+    return np.polydiv(polynomial, get_field_poly())[1]
 
 
 def decoding_rs(received_message, field_degree):
