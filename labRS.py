@@ -2,7 +2,6 @@ import numpy as np
 
 
 def encoding_rs(message):
-
     a = np.array(message)
 
     g = get_forming_poly()
@@ -12,7 +11,7 @@ def encoding_rs(message):
 
     res = np.polyadd(xra, dev)
 
-# insert right matrix in cwc
+    # insert right matrix in cwc
     if code_word_check(res):
         return res
     return res
@@ -47,7 +46,6 @@ def normalize_poly(polynom):
 
 
 def code_word_check(codeword):
-
     h = np.array([
         [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1],
         [0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0],
