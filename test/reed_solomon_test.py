@@ -1,6 +1,6 @@
 import pytest
 import random
-from main.reed_solomon import encoding_bch, decoding_bch
+from main.reed_solomon import encode_bch, decode_bch
 
 k = 12  # input message length
 
@@ -12,6 +12,6 @@ def test_encoding():
             input_message.append(random.randint(0, 1))
 
         try:
-            encoding_bch(input_message)
+            encode_bch(input_message)
         except:
             pytest.fail()

@@ -1,8 +1,7 @@
 import numpy as np
 
 
-def encoding_bch(message):
-
+def encode_bch(message):
     a = np.array(message)
 
     g = get_forming_poly()
@@ -107,7 +106,7 @@ def mod_field(polynomial):
     return np.polydiv(polynomial, get_field_poly())[1]
 
 
-def decoding_bch(received_message, field_degree):
+def decode_bch(received_message, field_degree):
     r = np.array(received_message)
     s = get_syndrome(r)
     field = get_field(field_degree)
