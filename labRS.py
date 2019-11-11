@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def encoding_rs(message):
+def encoding_bch(message):
 
     a = np.array(message)
 
@@ -13,8 +13,8 @@ def encoding_rs(message):
     res = np.polyadd(xra, dev)
 
 # insert right matrix in cwc
-    if code_word_check(res):
-        return res
+    #if code_word_check(res):
+        #return res
     return res
 
 
@@ -112,7 +112,7 @@ def mod_field(polynom):
     return np.polydiv(polynom, get_field_poly())[1]
 
 
-def decoding_rs(received_message, field_degree):
+def decoding_bch(received_message, field_degree):
     r = np.array(received_message)
     s = get_syndrome(r)
     field = get_field(field_degree)
