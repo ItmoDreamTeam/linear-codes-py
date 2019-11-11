@@ -11,10 +11,6 @@ def encoding_bch(message):
     dev = normalize_poly(np.polydiv(xra, g)[1])
 
     res = np.polyadd(xra, dev)
-
-# insert right matrix in cwc
-    #if code_word_check(res):
-        #return res
     return res
 
 
@@ -30,10 +26,10 @@ def get_field_poly():
     return np.array([1, 0, 1, 1])
 
 
-def normalize_poly(polynom):
+def normalize_poly(polynomial):
     result = []
 
-    for x in np.nditer(polynom):
+    for x in np.nditer(polynomial):
         if abs(x) % 2 == 0:
             x = 0
             result.append(x)
@@ -47,7 +43,6 @@ def normalize_poly(polynom):
 
 
 def code_word_check(codeword):
-
     h = np.array([
         [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1],
         [0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0],
@@ -108,8 +103,8 @@ def get_syndrome(received_message):
     return np.array(normalize_poly(mod_field(received_message)))
 
 
-def mod_field(polynom):
-    return np.polydiv(polynom, get_field_poly())[1]
+def mod_field(polynomial):
+    return np.polydiv(polynomial, get_field_poly())[1]
 
 
 def decoding_bch(received_message, field_degree):
