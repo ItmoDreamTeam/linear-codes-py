@@ -29,22 +29,26 @@ def decode(input_message: str) -> str:
 ### Private Functions ###
 
 syndrome_to_error_index_map = {
-    (0, 0, 1): 0,
-    (0, 1, 0): 1,
+    (1, 0, 1): 0,
+    (1, 1, 1): 1,
+    (1, 1, 0): 2,
     (0, 1, 1): 3,
-    (1, 0, 0): 2,
-    (1, 0, 1): 6,
-    (1, 1, 0): 4,
-    (1, 1, 1): 5,
+    (0, 0, 1): -1,
+    (0, 1, 0): -1,
+    (1, 0, 0): -1,
 }
 
 
 def find_single_error_index(input):
     syndrome = normalize(np.polydiv(input, G)[1])
     if sum(syndrome) == 0: return -1
-    return syndrome_to_error_index_map[syndrome[0], syndrome[1], syndrome[2]]
+    return syndrome_to_error_index_map[
+        syndrome[0],
+        0 if len(syndrome) < 2 else syndrome[1],
+        0 if len(syndrome) < 3 else syndrome[2]
+    ]
 
 
 def correct_single_error(codeword: np.ndarray, error_index: int) -> np.ndarray:
-    codeword[error_index] = 0 if codeword[error_index] == 1 else 0
+    codeword[error_index] = 0 if codeword[error_index] == 1 else 1
     return codeword
