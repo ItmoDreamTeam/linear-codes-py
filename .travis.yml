@@ -1,5 +1,5 @@
 language: python
 script:
-  - coverage run -m pytest
+  - coverage run --source main -m pytest
 after_success:
   - coveralls
