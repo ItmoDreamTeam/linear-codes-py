@@ -1,7 +1,11 @@
 import pytest
 import random
-from main.golay import encode_golay, decode_golay
+from main.golay import encode, decode
 
 
 def test_encoding():
-    assert encode_golay("0000") == "0000000"
+    assert encode("000000000010") == "000000000001100011101010"
+
+
+def test_decoding():
+    assert decode("000000000001100011101010") == "000000000010"
