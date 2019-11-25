@@ -8,14 +8,14 @@ from main.utils import *
 
 n = 24
 k = 12
+G = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
 
 
 ### Public Functions ###
 
 def encode(input: str) -> str:
     message = np.array(stringToList(input))
-    g = get_forming_poly()
-    result = normalize(np.polymul(g, message))
+    result = normalize(np.polymul(G, message))
     return listToString(result, n)
 
 
@@ -27,8 +27,6 @@ def decode(input: str) -> str:
         syndrome = get_syndrome(received_message)
         syndrome_16 = get_syndrome_16(syndrome)
         syndrome_17 = get_syndrome_17(syndrome)
-
-        weight = get_weight(syndrome)
 
         if get_weight(syndrome) <= 3:
             errors = syndrome
@@ -53,25 +51,27 @@ def decode(input: str) -> str:
 
 ### Private Functions ###
 
-def get_forming_poly():
-    return np.array([1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1])
+
+def get_syndrome(message):
+    return normalize(np.polydiv(message, G)[1])
 
 
-def get_poly_of_degree(degree):
-    if degree == 16:
-        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    if degree == 17:
-        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+def get_syndrome_16(syndrome):
+    remainder = get_remainder_16()
+    return normalize(np.polyadd(syndrome, remainder))
 
 
 def get_remainder_16():
-    g = get_forming_poly()
-    return normalize(np.polydiv(get_poly_of_degree(16), g)[1])
+    return normalize(np.polydiv(get_poly_of_degree(16), G)[1])
+
+
+def get_syndrome_17(syndrome):
+    remainder = get_remainder_17()
+    return normalize(np.polyadd(syndrome, remainder))
 
 
 def get_remainder_17():
-    g = get_forming_poly()
-    return normalize(np.polydiv(get_poly_of_degree(17), g)[1])
+    return normalize(np.polydiv(get_poly_of_degree(17), G)[1])
 
 
 def get_weight(syndrome):
@@ -82,18 +82,8 @@ def get_weight(syndrome):
     return weight
 
 
-def get_syndrome(message):
-    g = get_forming_poly()
-    return normalize(np.polydiv(message, g)[1])
-
-
-def get_syndrome_16(syndrome):
-    g = get_forming_poly()
-    remainder = get_remainder_16()
-    return normalize(np.polyadd(syndrome, remainder))
-
-
-def get_syndrome_17(syndrome):
-    g = get_forming_poly()
-    remainder = get_remainder_17()
-    return normalize(np.polyadd(syndrome, remainder))
+def get_poly_of_degree(degree):
+    if degree == 16:
+        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    if degree == 17:
+        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
