@@ -1,25 +1,31 @@
 import numpy as np
+from main.utils import *
+
+n = 7
+r = 3
+k = n - r
+G = [1, 0, 1, 1]  # G = x^3 + x + 1
 
 
-def encode_bch(message):
-    a = np.array(message)
+### Public Functions ###
 
-    g = get_forming_poly()
-    xr = get_degree_poly()
-    xra = np.polymul(xr, a)
-    dev = normalize_poly(np.polydiv(xra, g)[1])
-
-    res = np.polyadd(xra, dev)
-    return res
-
-
-def get_forming_poly():
-    return np.array([1, 0, 1, 1])
+def encode(input_message: str) -> str:
+    """
+    :return: A * x^r + (A * x^r) mod G, where A is input codeword
+    """
+    input = np.array(stringToList(input_message))
+    extended = np.polymul(input, [1, 0, 0, 0])
+    result = np.polyadd(extended, np.polydiv(extended, G)[1])
+    return listToString(normalize_poly(result), n)
 
 
-def get_degree_poly():
-    return np.array([1, 0, 0, 0])
+def decode(input_message: str) -> str:
+    input = np.array(stringToList(input_message))
+    result = input
+    return listToString(normalize_poly(result), k)
 
+
+### Private Functions ###
 
 def get_field_poly():
     return np.array([1, 0, 1, 1])
