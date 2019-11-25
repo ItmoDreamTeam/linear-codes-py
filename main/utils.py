@@ -8,3 +8,7 @@ def stringToList(message: str) -> List[int]:
 def listToString(message: List[int], size: int) -> str:
     representation = "".join(map(lambda bit: str(int(bit)), message))
     return "0" * (size - len(representation)) + representation
+
+
+def normalize(polynomial) -> List[int]:
+    return list(map(lambda e: abs(int(e)) % 2, polynomial))
