@@ -1,6 +1,10 @@
-# for Golay code 24,12,8 which can find up to 3 errors
+"""
+  Golay code [24, 12, 8]
+  It can find and correct up to 3 errors
+"""
 
 import numpy as np
+from main.utils import *
 
 
 def get_forming_poly():
@@ -10,77 +14,51 @@ def get_forming_poly():
 def get_poly_of_degree(degree):
     if degree == 16:
         return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
     if degree == 17:
         return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
 def get_remainder_16():
     g = get_forming_poly()
-
-    return normalize_poly(np.polydiv(get_poly_of_degree(16), g)[1])
+    return normalize(np.polydiv(get_poly_of_degree(16), g)[1])
 
 
 def get_remainder_17():
     g = get_forming_poly()
-
-    return normalize_poly(np.polydiv(get_poly_of_degree(17), g)[1])
+    return normalize(np.polydiv(get_poly_of_degree(17), g)[1])
 
 
 def encode_golay(message):
     if len(message) > 12:
         return 0
-
     message = np.array(message)
     g = get_forming_poly()
-
-    return normalize_poly(np.polymul(g, message))
-
-
-def normalize_poly(polynom):
-    result = []
-
-    for x in np.nditer(polynom):
-        if abs(x) % 2 == 0:
-            x = 0
-            result.append(x)
-        elif abs(x) % 2 == 1:
-            x = 1
-            result.append(x)
-        else:
-            result.append(x)
-
-    return result
+    return normalize(np.polymul(g, message))
 
 
 def get_weight(syndrome):
     weight = 0
-
     for bit in list(syndrome):
         if bit:
             weight += 1
-
     return weight
 
 
 def get_syndrome(message):
     g = get_forming_poly()
-
-    return normalize_poly(np.polydiv(message, g)[1])
+    return normalize(np.polydiv(message, g)[1])
 
 
 def get_syndrome_16(syndrome):
     g = get_forming_poly()
     remainder = get_remainder_16()
-
-    return normalize_poly(np.polyadd(syndrome, remainder))
+    return normalize(np.polyadd(syndrome, remainder))
 
 
 def get_syndrome_17(syndrome):
     g = get_forming_poly()
     remainder = get_remainder_17()
-
-    return normalize_poly(np.polyadd(syndrome, remainder))
+    return normalize(np.polyadd(syndrome, remainder))
 
 
 def decode_golay(received_message):
@@ -108,7 +86,7 @@ def decode_golay(received_message):
         shift += 1
         received_message = np.roll(received_message, 1)
 
-    code_word = normalize_poly(np.polyadd(received_message, errors))
+    code_word = normalize(np.polyadd(received_message, errors))
     code_word = np.roll(code_word, -shift)
 
     return code_word
