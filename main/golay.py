@@ -14,9 +14,9 @@ G = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
 ### Public Functions ###
 
 def encode(input: str) -> str:
-    message = np.array(stringToList(input))
-    result = normalize(np.polymul(G, message))
-    return listToString(result, n)
+    message = stringToList(input)
+    result = np.polymul(G, message)
+    return listToString(normalize(result), n)
 
 
 def decode(input: str) -> str:
@@ -75,11 +75,7 @@ def get_remainder_17():
 
 
 def get_weight(syndrome):
-    weight = 0
-    for bit in list(syndrome):
-        if bit:
-            weight += 1
-    return weight
+    return sum(syndrome)
 
 
 def get_poly_of_degree(degree):
