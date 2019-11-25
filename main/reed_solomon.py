@@ -43,9 +43,9 @@ def find_single_error_index(input):
     syndrome = normalize(np.polydiv(input, G)[1])
     if sum(syndrome) == 0: return -1
     return syndrome_to_error_index_map[
-        syndrome[0],
-        0 if len(syndrome) < 2 else syndrome[1],
-        0 if len(syndrome) < 3 else syndrome[2]
+        syndrome[-1],
+        0 if len(syndrome) < 2 else syndrome[-2],
+        0 if len(syndrome) < 3 else syndrome[-3]
     ]
 
 
