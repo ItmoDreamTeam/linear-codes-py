@@ -11,3 +11,11 @@ def test_without_errors_1():
 def test_without_errors_2():
     assert encode("100011100110") == "11001110010100001011110"
     assert decode("11001110010100001011110") == "100011100110"
+
+
+def test_with_single_error():
+    source = "011011100010"
+    for error_index in range(12):
+        corrupted_bit = '0' if source[error_index] == '1' else '1'
+        corrupted = source[:error_index] + corrupted_bit + source[error_index + 1:]
+        assert decode(corrupted) == source
