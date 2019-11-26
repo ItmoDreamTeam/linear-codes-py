@@ -21,6 +21,11 @@ def encode(input: str) -> str:
 
 def decode(input: str) -> str:
     received_message = stringToList(input)
+    if sum(get_syndrome(received_message)) == 0:
+        decoded_codeword = np.polydiv(received_message, G)[0]
+        decoded_codeword = normalize(decoded_codeword[len(decoded_codeword) - k:])
+        return listToString(decoded_codeword, k)
+
     shift = 0
 
     while True:
