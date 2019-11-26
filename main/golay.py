@@ -1,12 +1,12 @@
 """
-  Golay code [24, 12, 8]
-  It can find and correct up to 3 errors
+  Golay Code (n=23, k=12, d=8)
+  It can find and correct up to t=3 errors
 """
 
 import numpy as np
 from main.utils import *
 
-n = 24
+n = 23
 k = 12
 G = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
 
@@ -20,16 +20,11 @@ def encode(input: str) -> str:
 
 
 def decode(input: str) -> str:
-    received_message = stringToList(input)
-    if sum(get_syndrome(received_message)) == 0:
-        decoded_codeword = np.polydiv(received_message, G)[0]
-        decoded_codeword = normalize(decoded_codeword[len(decoded_codeword) - k:])
-        return listToString(decoded_codeword, k)
+    codeword = stringToList(input)
 
     shift = 0
-
     while True:
-        syndrome = get_syndrome(received_message)
+        syndrome = get_syndrome(codeword)
         syndrome_16 = get_syndrome_16(syndrome)
         syndrome_17 = get_syndrome_17(syndrome)
 
@@ -46,12 +41,13 @@ def decode(input: str) -> str:
             break
 
         shift += 1
-        received_message = np.roll(received_message, 1)
+        codeword = np.roll(codeword, 1)
 
-    code_word = normalize(np.polyadd(received_message, errors))
-    code_word = np.roll(code_word, -shift)
-
-    return listToString(code_word, k)
+    codeword = normalize(np.polyadd(codeword, errors))
+    codeword = np.roll(codeword, -shift)
+    decoded_codeword = np.polydiv(codeword, G)[0]
+    decoded_codeword = normalize(decoded_codeword[len(decoded_codeword) - k:])
+    return listToString(decoded_codeword, k)
 
 
 ### Private Functions ###
