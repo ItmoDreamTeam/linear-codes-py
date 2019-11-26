@@ -14,8 +14,9 @@ def test_without_errors_2():
 
 
 def test_with_single_error():
-    source = "011011100010"
-    for error_index in range(12):
-        corrupted_bit = '0' if source[error_index] == '1' else '1'
-        corrupted = source[:error_index] + corrupted_bit + source[error_index + 1:]
+    source = "011100101001"
+    encoded_codeword = encode(source)
+    for error_index in range(len(encoded_codeword)):
+        corrupted_bit = '0' if encoded_codeword[error_index] == '1' else '1'
+        corrupted = encoded_codeword[:error_index] + corrupted_bit + encoded_codeword[error_index + 1:]
         assert decode(corrupted) == source
