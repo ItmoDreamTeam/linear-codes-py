@@ -1,6 +1,7 @@
 """
   Golay Code (n=23, k=12, d=8)
   It can find and correct up to t=3 errors
+  `Reference <https://docplayer.ru/46500923-Dekodirovanie-koda-goleya-dz-ot-ivanova-chast-vtoraya.html>`_
 """
 
 import numpy as np
@@ -9,6 +10,8 @@ from main.utils import *
 n = 23
 k = 12
 G = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
+x16 = [1] + [0] * 16
+x17 = [1] + [0] * 17
 
 
 ### Public Functions ###
@@ -24,20 +27,20 @@ def decode(input: str) -> str:
 
     shift = 0
     while True:
-        syndrome = get_syndrome(codeword)
-        syndrome_16 = get_syndrome_16(syndrome)
-        syndrome_17 = get_syndrome_17(syndrome)
+        syndrome = compute_syndrome(codeword)
+        syndrome_16 = compute_syndrome_16(syndrome)
+        syndrome_17 = compute_syndrome_17(syndrome)
 
-        if get_weight(syndrome) <= 3:
+        if compute_weight(syndrome) <= 3:
             errors = syndrome
             break
 
-        if get_weight(syndrome_16) <= 2:
-            errors = np.polyadd(get_poly_of_degree(16), syndrome_16)
+        if compute_weight(syndrome_16) <= 2:
+            errors = np.polyadd(x16, syndrome_16)
             break
 
-        if get_weight(syndrome_17) <= 2:
-            errors = np.polyadd(get_poly_of_degree(17), syndrome_17)
+        if compute_weight(syndrome_17) <= 2:
+            errors = np.polyadd(x17, syndrome_17)
             break
 
         shift += 1
@@ -53,34 +56,19 @@ def decode(input: str) -> str:
 ### Private Functions ###
 
 
-def get_syndrome(message):
-    return normalize(np.polydiv(message, G)[1])
+def compute_syndrome(codeword):
+    return normalize(np.polydiv(codeword, G)[1])
 
 
-def get_syndrome_16(syndrome):
-    remainder = get_remainder_16()
-    return normalize(np.polyadd(syndrome, remainder))
+def compute_syndrome_16(initial_syndrome):
+    remainder = np.polydiv(x16, G)[1]
+    return normalize(np.polyadd(initial_syndrome, remainder))
 
 
-def get_remainder_16():
-    return normalize(np.polydiv(get_poly_of_degree(16), G)[1])
+def compute_syndrome_17(initial_syndrome):
+    remainder = np.polydiv(x17, G)[1]
+    return normalize(np.polyadd(initial_syndrome, remainder))
 
 
-def get_syndrome_17(syndrome):
-    remainder = get_remainder_17()
-    return normalize(np.polyadd(syndrome, remainder))
-
-
-def get_remainder_17():
-    return normalize(np.polydiv(get_poly_of_degree(17), G)[1])
-
-
-def get_weight(syndrome):
+def compute_weight(syndrome):
     return sum(syndrome)
-
-
-def get_poly_of_degree(degree):
-    if degree == 16:
-        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    if degree == 17:
-        return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
