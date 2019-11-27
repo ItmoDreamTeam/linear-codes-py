@@ -13,17 +13,17 @@ def encode(input_message: str) -> str:
     """
     :return: A * x^r + (A * x^r) mod G, where A is input codeword
     """
-    input = np.array(stringToList(input_message))
+    input = np.array(string_to_list(input_message))
     extended = np.polymul(input, [1, 0, 0, 0])
     result = np.polyadd(extended, np.polydiv(extended, G)[1])
-    return listToString(normalize(result), n)
+    return list_to_string(normalize(result), n)
 
 
 def decode(input_message: str) -> str:
-    input = np.array(stringToList(input_message))
+    input = np.array(string_to_list(input_message))
     error_index = find_single_error_index(input)
     result = input[:k] if error_index < 0 else correct_single_error(input, error_index)[:k]
-    return listToString(normalize(result), k)
+    return list_to_string(normalize(result), k)
 
 
 ### Private Functions ###

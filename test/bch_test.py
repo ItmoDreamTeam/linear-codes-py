@@ -1,6 +1,6 @@
 import pytest
 import random
-from main.reed_solomon import encode, decode
+from main.bch import encode, decode
 
 
 def test_encoding():

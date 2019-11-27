@@ -17,13 +17,13 @@ x17 = [1] + [0] * 17
 ### Public Functions ###
 
 def encode(input: str) -> str:
-    message = stringToList(input)
+    message = string_to_list(input)
     result = np.polymul(G, message)
-    return listToString(normalize(result), n)
+    return list_to_string(normalize(result), n)
 
 
 def decode(input: str) -> str:
-    codeword = stringToList(input)
+    codeword = string_to_list(input)
 
     shift = 0
     while True:
@@ -50,7 +50,7 @@ def decode(input: str) -> str:
     codeword = np.roll(codeword, -shift)
     decoded_codeword = np.polydiv(codeword, G)[0]
     decoded_codeword = normalize(decoded_codeword[len(decoded_codeword) - k:])
-    return listToString(decoded_codeword, k)
+    return list_to_string(decoded_codeword, k)
 
 
 ### Private Functions ###
